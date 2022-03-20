@@ -1,0 +1,1131 @@
+FlightPath 6.x Changelog
+========================
+
+2022-02-21
+  Modified .htaccess for compatibility with Order directive throwing a 500 error in some implementations of Apache 2.4.  Thanks, Apache!  
+  
+  Added extra class to html when drawing pie charts, to show the degree level num (1-3) as well as the "classification" (MAJOR, CONC, etc).
+   
+
+2022-02-15  
+  Added new column to content__engagement:  to_sms_phone.  This is so we can keep up with what number this txt message was sent TO.  Useful for
+  schools with more than one number.  Only applies to engagement type txt_msg.
+  
+  Added a message on engagements screen when a sent txt message is not delivered.
+  
+  Altered "engagements received" tab (under alerts) to show txt messages sent to us even though they may not be our advisee.  This is based on
+  phone numbers which we are marked as should receive notifications for.
+  
+
+2022-02-14
+  Added new tab to the Alerts (bell icon) page.  Engagements (txt or email) sent by student.
+  
+  Made it so the bell icon badge is recalculated every 1 second to 20 minutes (based on a system setting).
+  
+  Fixed a bug to where when you logged a received email, it actually SENT the email to the student's address.  Same for SMS.
+  
+  Fixed bug in media.css where it was causing some things to be scrunched up.
+  
+  Made it so the notification (when you receive a txt from a student) says what number/line name they sent it to.
+  
+  Made is to that the student_activity record that is created when we receive a txt message states what number/line it was sent to.
+
+  Sometimes we get "7BIT" code issues in email bodies, where things like a non-breaking space appears as =C2=A0.  Added functionality
+  to convert to standard HTML instead.
+  
+  Fixed bug where if you do not have any advisees, you should see nothing on the "Advisee Activities" tab.  Same for Advisee Engagements tab.
+
+
+2022-02-13
+  Added ability to have replacement patterns in menu item titles.  Good for changing values in tabs.
+  
+  Minor tweaking to working and examples in hook.api.php.
+  
+  Modified alerts module to report how many unread alerts there on on tab.
+  
+  More work on the alerts bell "badge" logic.
+  
+
+2022-02-12
+  Minor tweaks to CSS
+  
+  Preparing to enable "basge" functionality for the alerts bell.
+
+  Created a new hook "hook_get_alert_count_by_type()" which will let a module declare the total, read, and unread
+  counts of *something* (probably content), we we can decideif we need to place a badge on the bell icon at the top of
+  the screen.
+  
+  Created new functions in misc.inc to interact with the hook, as well as a change to content when we set the "last access"
+  value, as well as when we create, edit, or delete any content.
+  
+  
+
+2022-02-09
+  Fixed bug where we were checking the wrong permission for adding and editing content from the content page.
+  
+
+2022-02-08
+  Fixed bug in content module such that you could only have a "file" field if it was named "attachment".  Also added
+  the ability to have more than one file field per content form.
+  
+  Added a little extra styling for form fields in content forms.
+
+
+2022-02-04
+  Made it so if a numeric grade is supplied with MID at the end, it is converted to a letter grade with MID at the end.
+  
+  Added new function, fp_confirm(), which is meant to work with fp_get_js_confirm_link() to create a modal confirm popup,
+  instead of native javascript popup.  From same creator as the fp_alert() dropin replacement.
+  
+
+2022-02-02
+  Fixed bug where student name was being used instead of faculty name when sending a txt message via Engagements.
+  
+  Also fixed bug where if student has no number, it was showing that they had opted-out, which was not necessarily true.
+
+  Added extra spans and css styling when showing pie charts.
+
+  Changed delete links on History tab to use simple "X" from font-awesome, both
+  for advising and student files.
+  
+  Changed queries for advising history to look up "groups" of advising sessions by advising_session_token.
+  
+  Added ability in creating a confirm link (in misc.php) to have a link title
+  so something appears when you hover over link.
+
+2022-01-30
+  When drawing pie charts, use base_url() instead of function base_path() to use the pchart library. Added more CSS class to make it easier to theme later.  
+
+
+2022-01-27
+  Fixed bug where draft mode was no longer accessible.
+
+  Fixed several bugs where school_id was not being taken into account with regard to track selection.
+  
+  Fixed FlightPath::get_all_courses_in_catalog_year()-- noticed that it was hard-coded to only return undergrad courses.  Added
+  a boolean to change that.
+  
+
+2022-01-26
+  Tweaked logic to function that "balances" the student profile attributes.
+  
+  
+2022-01-19
+  Added new function: db_get_user_id_from_user_name()
+
+
+2022-01-17
+  Added ability to change site logo (in system settings).
+  
+  Added "powered by FlightPath Academics" to bottom of page template.
+  
+  Correcting if statements checking for if hours < 1 to if hours == 0, since some courses at some
+  schools may be less than 1 hour.
+  
+
+2022-01-16
+  Changed the 404 error to log as "page_not_found" type, instead of "system", as it shows up quite a bit in the logs and can be
+  difficult to sift through for valid system messages.
+  
+  Updated Lassie message to show time in site's default timezone.
+  
+
+2022-01-15
+  Fixed bug where degrees, groups, and courses not in school 0 were showing up (and causing problems) when the schools
+  module was turned off.  Changed the logic so that when schools module is not enabled, we will only be shown school=0.
+
+  Added "date" as element type for form api.
+  
+  Added new hook to user module, allowing us to change the display value of a user attribute.
+  
+  Tweaked function to "balance" the profile items on a page.
+
+
+2022-01-13
+  Minor edit: cleared up wording for mass sms permission.
+  
+  Fixed bug where mass txt was not possible except for admin user because
+  we were checking the wrong permission.
+  
+  Small change to fp_space_csv function, to reduce double-spaces.
+  
+  Fixed bug in course search edit, where it was not showing terms correctly based on school_id.
+  
+  Added extra message to schools module.
+  
+  Added ability to have user editable attributes for other users.  Must set permission. See user.api.php for help
+  on how to "register" these custom attributes.
+  
+
+2022-01-12
+  Added ability to register and edit user attributes from the student profile page.  Saves automatically to the user_attributes table.  Created user.api.php
+  to help illustrate how the hook works.
+  
+  The user module also automatically adds permissions for new attributes.
+  
+  Added a convenience function to help "balance" the profile_items array between leftside and rightside, so we can easily "push" items onto it and
+  they automatically fall into place.
+  
+
+2022-01-10
+  Modified content.module to make sure a specific bug didn't happen where redirections might not be seen, as well
+  as added strip_tags() to values read directly from $_REQUEST.
+  
+  Fixed bug in group definitions, where if there was a blank line, or somehow a course with no subject_id, it could cause a problem.
+  
+
+2022-01-09
+  Removed extraneous testing functions.
+    
+  Added to logged 404 and 403 errors, added the location to the msg so it shows in the watchdog view.
+  
+  Added function to course_search to get capacity for particular course.
+
+  Updated system to add more indexes to advising tables.
+  
+
+2022-01-08
+  Fixed bug where "public files" tab was showing on all "add" content screens.
+  
+  Changed verbage so that SMS text messages change from "TXT" to "Text messages" throughout FlightPath modules.
+  
+  Implemented new setting in GUI to opt-out of receiving text messages.
+  
+  Implemented opting-out of text messages if user replies STOP.  Opting back in if they send UNSTOP or SUBSCRIBE.
+    
+  Removed accidental hard-coded signalwire setting.
+  
+  Implemented change to sms_history table so we can also track error messages and delivery status.
+  
+  Only update SMS record (in sms_history table) if price or err_code value changed.
+  
+  Added extra watchdog (debug) statements for when cron starts and stops.
+  
+
+2022-01-07
+  Added numerous new watchdog() statements to better track admin actions, like creating and deleting degrees, groups, etc.
+
+  Made the default time to delete watchdog debug statements 1 year instead of 90 days.
+  
+  Made the default time to delete normal watchdog statements 3 years instead of 1.5 years.
+
+  Always add a "text STOP to opt-out" type message to the end of every sms message.
+  
+  Altered encounters SMS settings to let user specify which phone numbers are specifically for mass text messages.  The
+  mass text messaging form will only select those.
+
+
+2022-01-04
+  Added ability to send arguments to fp_goto() as an array.
+  
+  Added ability to install Zoom (if zoomapi module is enabled) from login form.
+  
+  Changed position of email address question in install.php
+  
+  Fixed bug in content module where attributes field in db data content_files wasn't being created on install.
+  
+
+2022-01-03
+  Added new permission just for clearing system cache  (was using administer_modules, which isn't really the same thing)
+  
+  Added ability in public files to replace existing filename if it already exists.
+  
+  Changed course popup description to note when a student was enrolled in a course, vs. just showing the enrolled
+  grade (ex: "E").
+  
+  
+2022-01-02
+  Added extra verbage to cli.php to make it clear it should be run as the webserver user.
+  
+  
+2022-01-01
+  Added new base_url() function.
+  
+  Created new concept of "public files" which users may upload to a special directory under /custom/files/content_uploads/public_uploads.  This screen is on a subtab
+  from the normal Content screen, and allows users to upload and delete files (with allowed extensions) for use outside of FlightPath, or when linking
+  to CSS or other files from within settings.
+  
+
+2021-12-30
+  Added new indexes to watchdog table for faster reporting.
+  
+  Fixed typo in descriptions in encryption module.
+
+  Updated cli.php to also allow db updates from the command line, as well as display help if no arguments
+  are sent, or if ?, -h, --help, or help or sent.
+  
+
+2021-12-29
+  Added more permissions and security checks when accessing files and content, especially of the user is a student and just trying out
+  URLs.  We make sure they do not have access to any content, comments, or files they aren't supposed to see.  
+  
+  Added icon for encryption module, removed old, unused settings from hook_menu items throughout FlightPath.
+  
+
+2021-12-28
+  Adding new module to core: encryption, and setting up key variable in settings.php on installation (giving it a random string value at the time of
+  installation).
+  
+  Adding ability to save all content files as encrypted, and properly decrypt them for end user, based on if the user has permission to view
+  the original content it was attached to.
+  
+
+2021-12-27
+  Adding ability to have encrypted files for content_files.  Also, that table tells which piece of content the file belongs to, if any.
+  
+  Made it so if $content->title is unset, false, or null, then on save we give a simple default value.  This is to stop of mysql integrity
+  constraint where the title cannot be null.
+
+  Altered engagements so that received files (via email or SMS) go to temp directory on server first, before we then attach them to a piece
+  of content via its cid in the content_files table.
+  
+  Fixed minor sorting issue on Engagements main tab screen.
+  
+  Altered content module's install so that is_encrypted and cid are both in the table, so we can figure out which piece of content (and therefor, permissions)
+  the file is related to.
+  
+
+
+2021-12-22
+  Added a strip_tags() call in course_search module, just to make sure we do not display dangerous user-supplied input.
+
+
+2021-12-21
+  Stored results of content_get_types() to a simple GLOBALS cache to reduce amount of times we look for it.
+  
+  Altered Calendar module to include instructions for de-authorizing Zoom.
+
+  Fixed bug in Calendar where Zoom was hardcoded to look for user 1 (admin) tokens.
+  
+
+2021-12-19
+  Moved all Zoom functionality into its own (private) module called zoomapi.  Updated other core modules to adjust and check for zoomapi before trying to call
+  functions. 
+
+
+2021-12-18
+  Fixed bug in system_enable_module() where status was being sent the schema value instead of "1"
+
+
+2021-12-17
+  Cleaned up old comments.
+  
+  Fixed bug where we were determing a course's transfer eqv.  It was failing even though the souce hours were within the range
+  of min and max hours.  (We were only looking at == max hours, rather than a range from min to max).
+
+  Fixed bug so that the "mini search" at top of the screen will cause the Students tab to "remember" last search.
+  
+  Added concept of "return to student" to the top nav of all pages, so you can quickly return to the last student you had pulled up.
+  This only works for faculty users with something in $_SESSION['last_student_selected'].
+  
+  Added "E" to default enrolled grades, and "F,W,I" to default retake grades.
+
+  We now log (as WATCHDOG_DEBUG) when user tries to access a page and gets either a 404 Not Found or 403 Access Denied.
+
+  Suppress rare warning when calling session_destroy().
+  
+
+2021-12-15
+  Adding some extra instructions for the edit groups page.
+
+  Fixed bug where courses worth less than 1 credit hour were not showing as repeatable in groups, even when the "set catalog repeats" box was checked.
+    
+  Adding concept of "delete_flag" to advising_sessions table, similar to the advising_comments table.  Also added permission to let users delete advising sessions
+  for up to 3 months after posting, again, similar to the comments module.
+    
+  Updated comments module to make sure only the original author of a comment can delete it.
+  
+  
+      
+
+2021-12-14
+  Added extra protection in our _fp_error_handler to not accidentally log passwords in plaintext.
+  
+  Fixed small bug in viewing watchdog entries where page was set to 1, always sending us to the second page
+  of results if we clicked the Watchdog breadcrumb. 
+  
+
+2021-12-13
+  Added code to create /custom/files/content_uploads/ folder.  Updated content module and engagements module
+  to place uploaded files there.
+  
+  Fixed spelling of "README" file.
+  
+
+2021-12-12
+  In calendar, when parsing ical feeds, we now correctly ignore time marked as "free" (transp == TRANSPARENT in the event).  Also fixed bug where you couldn't schedule appointments
+  on the exact start and stop hour of a date's availability window (based on the "default" setting for that unavail time).
+  
+  Altered the way Zoom API works to better support api specs for Zoom marketplace apps.
+  
+  If SMS is not enabled, then txt messages cannot be selected as a default notification method.
+  
+
+2021-12-09
+  Added more watchdog (debug) statements having to do with checking IMAP server for messages.
+  
+
+2021-12-08
+  Fixed error in engagements where test name was being shown as author of engagement.
+   
+
+2021-12-07
+  Small modifications to media.css.
+  
+
+2021-12-02
+  Added a README.txt file under custom/themes so that the themes folder will be created upon install.
+  
+
+2021-11-26
+  Implemented multi-factor authentication (via email) for local users.  The user can also choose to have their device "remembered" for 30 days, so they are not asked to
+  re-authenticate every time.  This will only work for local users with email addresses saved.  Users with no email address, or users using LDAP, SSO, etc, will not
+  be prompted to enter MFA code.
+  
+  Added convenience string functions like str_starts_with() to misc.inc, if not included.  These are implemented in PHP 8; they are here for users not running PHP 8.
+  
+  Added admin email address as a required field in the initial install script for FlightPath.
+
+
+2021-11-23
+  Fixed bug where advising snapshot (on dashboard) wasn't taking all advisees into account, only the first 20.  Simultaneously added
+  code to allow for more than 20 student results at a time.  Previously 20 was hard-coded, not a variable.
+
+  Converted the "Contact the FlightPath Production Team" popup window into a dialog.
+
+
+2021-11-19
+  For the content type "schedule_unavailable_time", changed the ics url field to a textarea and text (in mysql) to be able to handle URLs longer than 255 chars.
+
+  Fixed bug in install process where current schema of modules were not being set, causing the user to be told they need to run db updates even
+  on first install.
+  
+  Enable almost all core modules on initial install.
+  
+  Modified smtp module so that if we send a blank message it will just not send (but log it) rather than show an error message.
+  
+
+2021-11-18
+  Added "spinner" to submit button for duplicating an entire year of degree data.
+
+  Watchdog page converted to use sortable table and pager query.  Also added severity as column.
+  
+  Fixed bug in major students progress report (wasn't paying attention to school properly)
+  
+  Fixed bug where if student's school wasn't set correctly, it would look it up upon object creation.
+  
+
+2021-11-16
+  Gave "clear all cache" its own permission.
+  
+  Cleaning up CSS.
+
+
+2021-11-02
+  Added concept of "capacity" to course_search module (stored per-term in the course_rotation_schedule table).  Also added extra CSS when editing course schedule 
+  information.
+
+
+2021-10-28
+  Fixed bug in course_search module where the filter for "view courses offered" (and you select the term) was not working as expected
+  in all situations, because it was not taking the school_id into account.
+
+  Made the users module filter selection more intuitive.  For example, the school selection, and the behavior when you search
+  for a particular name, while a school is selected.  Plus, made sure not to reset ALL filters if you select a letter.  For example,
+  you can now select a school, and then select by letters to see the students/users in that school.  The Major pulldown also gets altered
+  based on selected school.  Also changed the order of the sub tabs so that Student Users comes second.
+
+
+
+2021-10-27
+  Added a new "how to customize" folder and custom theme which inherits from fp6_clean theme.  It also includes instructions
+  in a README file for copying the theme to your /custom/theme folder and overriding CSS styles.
+
+  Added new function to make CSV strings prettier by adding a space after the comma.  Makes them break correctly in HTML.  Also
+  changed term settings fields for advising settings from textfield to textarea, so you can enter more than 255 chars.
+  
+
+2021-10-24
+  Added ability to designate notification recipients for when a student sends an SMS to a specific line (advisors will *always* receive
+  such notifications from their advisees).  This is a setting on the admin/user page for faculty-staff members only.
+
+
+2021-10-21
+  Added new concept to textareas with a maxlength set.  It will now by default show the character count up to the max.
+
+  Completed sending mass txt messages with Engagements, and getting back results in a CSV.
+
+
+2021-10-20
+  Made alteration to student_search so that if you have schools enabled, and search for a major within a school, you only see results for that
+  school.  Also, fixed bug where if more than one school had the same major code, it was skipping over them.
+  
+  Fixed some malformed HTML in the user module causing placeholder text to look weird.
+  
+  Fixed a bug by adding permission to schools, to permit a user to edit users/students from a particular school.
+  
+
+2021-10-17
+  Minor change in admin.module to fix typo.
+  
+  Implemented sending mass text messages function as part of the Engagements
+  module.
+
+
+2021-10-14
+  Fixed bug in notify module, where the notification history table wasn't created.
+
+  Added permissions on a per-phone number level for sending SMS messages.
+
+  Engagements show which department/description the SMS was sent to or from on the main screen.
+
+
+2021-10-13
+  Made changes to engagements schema, so that we can track the SMS number a txt message was sent from, as well as the sms message id, in the table.
+
+  Made change to content_versions table schema, so we have the option of saving a "log" message with the content.  This is accomplished by entering:
+    $content->log = "some text here"; 
+  before calling content_save($content);
+
+
+2021-10-12
+  Working on Engagements' ability to have multiple numbers on account they can receive SMS from.
+  
+
+2021-10-11
+  Fixed bug in Engagements, where it was not showing attached files correctly from SMS.
+
+  Changed how we handle incoming SMS messages to better catch "real time" messages.
+
+
+2021-10-10
+  Cleaned up code in various places.
+
+  Fixed bug in Engagements where date_sent was not in correct format.  Also fixed old code which was causing a PHP syntax error for txt messages.
+
+  Added function db_get_cwid_from_user_id() to db.inc file.
+
+  Added missing function engagements_handle_incoming_sms() to engagements to stop 404 error, though at the moment this function is just
+  a placeholder, and might be removed in the future.
+
+
+2021-10-08
+  Upon system install, correctly get the modules' schema from their .info file, so we aren't told we need to run updates right off the bat.
+  
+
+2021-10-07
+  Made changes to content module, so that we keep track of each version's author (user_id), but the original
+  user_id in the content table doesn't get overwritten.  This lets admin edit an existing piece of content, for example,
+  without us losing track of who the original author was, or who the author is of each version.
+
+  Added some extra CSS to Advising Screen, for the table rows containing the pie charts.  Should make it easier
+  to selectively hide or show them for future CSS devs.
+
+  
+2021-10-05
+  Added a "view combined" link on History for advisings of multiple terms, so you can see all the selections on
+  one screen.
+  
+  Added new column to "advising_sessions", called "advising_session_token".  It is the same value when we advise for
+  1 or more terms. It makes it easier to get a list of all the terms that were advised at the same time, and possibly can
+  be useful in the future for other modules.
+  
+
+2021-10-03  
+  Made it so the db updates system uses the Batch API so it won't timeout over long update jobs.
+  
+  Made it so that the watchdog "message" column is "longtext" instead of just "text".  Same for announcements, alerts, and other core modules' tables.
+  This was to prevent users from entering more than 65kb of text in a single field, something that was indeed a possibility, especially in the watchdog
+  table when debugging complex datatypes.  The decision was made to either use blob or "longtext" from now on, instead of "text", as it can store up to 
+  4gb of data, with only a 2 byte increase in overhead over "text".
+  
+  Modified content module so we only look for content whose modules are enabled.  This was done
+  to prevent a PHP warning message, and to prevent strange behavior if we tried to edit previously
+  submitted content.
+  
+  Made minor edit to batch test routine to better illustrate how limits work.
+  
+  Minor tweak when loading degree to prevent PHP warning.
+  
+  Since "groups" is a reserved keyword in MySQL 8+, edited various files to enclose in backticks when performing sql on that table.
+  
+
+2021-09-27
+  Altered weights in dashboard render array for consistency.
+  
+
+2021-09-26
+  Increased weight of submit and delete buttons in content module.
+  
+  
+2021-09-22
+  Made it so custom content types' add form is automatically allowed up to 4 additional wildcards in the menu, for future module
+  developers to make use of, if desired.
+  
+  Fixed bug in the way form submissions were handled, which caused problems if you were depending on wildcards in URL during form submission.
+  
+  Fixed bug in Content module where editing content for non-admin wasn't working.
+  
+  Fixed bug in Content module to skip over markup fields.
+   
+
+2021-09-18
+  Wrapped some strings in announcements with t().
+  
+  Converted system dashboard to use render array system so other modules can modify it.
+  
+  Made it so that we can pass strings in a render array for simplicity (they appear as plain html markup)
+  
+  Weights in elements can be floats now, instead of only ints.
+  
+
+2021-08-19
+  Made it so that What If selection screen will show grad degree options if the student belongs to a grad rank other than 'GR' by checking
+  setting first.  Also re-worded the description of that school setting for clarity.
+  
+
+2021-08-18
+  Fixed bug in edit groups, where it was looking for school_id in prod table, and not draft table.  Same for degrees and courses.
+  
+
+2021-08-16
+  Since FireFox (as of this date) does not support the datetime-local type, I added a "shim" library where we will override the browser's behavior
+  with jquery.datetimepicker, if the browser does not support it. 
+  
+  Removed logging of _REQUEST from when forms are submitted, as it could represent an insecure watchdog message.
+  
+
+2021-08-13
+  Made alterations to the default settings.php file, to better explain certain concepts.
+  
+  Fixed system status page to not show %FLIGHTPATH_VERSION% as system version, if it came from git repository.  Instead
+  it just shows "GitRepo".
+  
+
+2021-08-12
+  Cleaned up some CSS for the permissions form (in the user module).
+  
+  Added "sticky" headers to permissions form to make it easier to use.
+  
+
+2021-08-11
+  Added a "custom settings" area to the default settings.php which is created during the installation process.  Also changed some of the wording in the
+  settings.php file, for clarity.
+    
+
+2021-08-10
+  Made the access stats report look nicer.
+  
+  Added more logging (including WATCHDOG_DEBUG) throughout FlightPath to make it easier to track activity.
+  
+  Added more time to setting to keep DEBUG entries, as well as wrapped more strings in t().
+  
+  Made changes to stats to make it easier to add a "school select" form for reports that need it.
+  
+  Adjusted major students progress report to use school_id correctly.
+  
+
+2021-08-09
+  Fixed bug with What If limit on selections; wasn't counting tracks correctly.
+  
+
+2021-08-08
+  Added the school_id and school_code to body class when viewing students.  The idea is to help CSS developers down the road.
+  
+  Cleaned up some on-screen messaging when changing terms.
+  
+  Added "spinner" property to apply draft changes button, changed description text as well.
+  
+  Fixed bug in editing group definitions where it was not respecting the new setting which allows "default" courses as well.
+  Also it was not properly disabling the Required Courses textarea, as it was using a String and not an Array for attributes.
+  
+  Made it so that when setting attributes on a form element, it must always be in the form of an array.  Updated various files
+  throughout FlightPath to make sure that was the case.
+  
+  Added new file, cli.php.  It's a command-line-only file.  At the moment, all it can do is clear the system's cache, but more commands
+  will be added eventually.
+  
+
+2021-08-06
+  Added new module_enabled() function to misc, which, due to caching, will make it faster to see if a module
+  is enabled or not, rather than using function_exists().  Updated various files to use this new function instead
+  of function_exists()
+
+  Added new setting to schools where courses from the "default" school can be used in non-default degrees and groups.
+
+  Added create table instructions to enagagements.install for required tables.
+   
+  Modified the fp_join_assoc() and explode functions to use a separator of _S- instead of just - (since we might be sending negative numbers).
+  
+  Removed bug where "Substitute" tab was showing in popup even on "courses added".
+  
+  Removed "Required by" text/line if we are in the Courses Added block, or if we are looking at a degree with only one "degree" (not combined).
+  
+  Fixed bug with student_files which was preventing file uploads.
+  
+
+2021-08-05
+  Added styling for "date" and "time" form element types.
+  
+  Added "major student progress" report to core system reports.
+  
+  Updated various reports (from stats module) to handle school_id in some way.
+  
+  Updated code to make sure school_id was supplied to key functions for determing course_id from name, as well
+  as changes to prereq module to ensure school_id was supplied to key functions.
+  
+  Marked a couple unused methods/functions for removal by adding z__ before the name.
+  
+  Fixed bug in users' Faculty Advisees list, where in the comment for an advisee you couldn't see their major code correctly.
+  
+
+2021-08-04
+  Removed out-of-date setting for student_search, where we can only search for majors in the current catalog year.
+  
+  Got rid of the course_search "report" where you can download offerings as CSV.  Should be under stats anyway.  For now,
+  simply removed.
+  
+  Updated parts of course_search (dealing with getting syllabus) to only use course_id in queries.
+  
+  Updated add new degree and copy degree to pay attention to school_id.
+  
+  Added new icons to system, and made sure all core modules had an icon associated with them in the Admin Console.
+  
+  Changed the way we denote that we are NOT overriding a core variable.  Instead of deleting from table, we mark it as 'no'
+  
+  Added multi-school functionality to audit settings.
+  
+  Added multi-school functionality to course search settings.
+  
+  Fixed bug with upcoming appointments.
+  
+  If using schools, made it so the advising snapshot lets you switch between schools.
+  
+
+2021-08-03
+  Added new variable_delete() function to db.inc.
+  
+  Added new variable_exists() function to db.inc.  Returns TRUE or FALSE if the variable is even in the variables table.
+  
+  Changed schools module to let us override default school settings on a *per field* level.
+  
+  Modified how variable_get_for_school() checks to see if we are overriding the default school's val.
+  
+  Modified admin's edit-advising-settings to handle multiple schools.
+  
+  Fixed bug where db's update_course_requirement_by_name was trying to use school_id in tables which didn't have it.
+
+
+2021-08-02
+  Added new menu type:  MENU_TYPE_DEFAULT_TAB. This is a tab which otherwise behaves like a MENU_TYPE_NORMAL_ITEM.
+  
+  Added new page_setting to menu router api:  $item['page_settings']['tab_title'] = "blah". This is an optional special string
+  used just for the tab of a page, separate from it's regular title.
+  
+  Replaced calls to GLOBALS['fp_system_settings'] array with variable_get() where appropriate.  Cleaned up unused functions.
+  
+  Added school column to output for student search of advisees.
+  
+  Added ability to specify optgroups for options in select lists in the Form API.
+  
+  Added ability to search for majors within a school (if user is allowed) on the student search screen.
+  
+  Modified course_search to let you search by school, if schools module is enabled.
+  
+  Fixed bug in course_search where it was not uploading syllabi correctly.  Also shortened filename of uploaded
+  syllabi to a more reasonable length.
+  
+  Added "school" column to the list of courses you can edit from course_search module. 
+  
+  
+2021-08-01
+  Deprecating fp_get_system_settings() function.  It is now better served by simple use of variable_get().
+  
+  Changed school setting "what_if_catalog_year" to "what_if_catalog_year_mode" to disambiguate from advising variables.
+  
+
+2021-07-31
+  Removed extra files from modules that used to be contrib, but are now in core (ex: CHANGELOG files)
+  
+  Added school_id to primary key for table degree_college
+  
+  In AdvisingScreen's output_to_browser(), $page_title has tags stripped before being used as HTML tag <title>
+  
+  Tweaked tabs' css slightly to give a little more whitespace below tabs.
+
+  Fixed bug where unchecked checkbox was never being saved as boolean false, and was instead being saved as NULL.  Also, wasn't working
+  if inside a fieldset.
+  
+
+2021-07-30
+  Fixed bug in Calendar with Upcoming Appointments still not showing "today" and "tomorrow" appointments correctly.  Went with different approach.
+  
+  Added ability to edit semester block numbers when editing a degree.
+
+  Added ability to limit the number of selections on What If.  It defaults to 5.  This is to help keep students from blowing up the server by selecting
+  every degree possible.
+  
+  Updated blank degrees (and schools) to be able to search by school.
+  
+  
+
+2021-07-29
+  Fixed deprecated notice.
+  
+  Calendar bug left in from dev-- it was not preventing students from clicking "back" and saving a second time.
+  
+  Added "spinner" attribute to button for confirm appointment and save.
+  
+  Added ICS attachment to notifications for student-initiated appointments.
+  
+  Removed dev code for external calendars.
+  
+  Added new code for caching external calendars for at least 5 minutes, to save frequent lookups.
+  
+  Added new code for Course objects, to keep track of all the semesters it appears in.  Good for combo-degrees.
+  
+
+2021-07-28
+  Fixed bug in calendar's upcoming appointments tab, wasn't showing date ranges correctly for timezones.
+  
+  Added ability to handle attachments to fp_mail(), as well as string attachments to smtp module.
+  
+  Added ability to send attachments (string method) with notifications by email.
+  
+  Added new property that can be added to form elements (like submit buttons), "spinner" => TRUE.  This
+  will cause a spinning graphic to appear when the button is pressed, and the button to disable itself so it
+  cannot be pressed more than once.
+  
+  Made it so all "content" forms use the spinner property for their submit buttons.
+  
+
+2021-07-27
+  Implemented check when searching for students, to make sure user has correct permissions to search for student in particular school.
+  
+  Added ability to trim only DEBUG messages from the watchdog.
+
+  Added ability to have external CSS files.  This is now a setting in System Settings, under the theme section.
+
+  Added default favicon to fp6_clean theme.
+  
+
+2021-07-26
+  Fixed bug when editing groups, where school_id was not correctly being loaded.
+
+  Fixed bug in group definitions and group course repeats, where FP was not respecting the school_id.
+  
+  Set a default icon (major.gif) for new groups.
+  
+  Added "upcoming appointments" tab to the Calendar page, which displays events which are approaching.
+  
+
+2021-07-25
+  Configured blank degrees to make use of the render system (so other modules can make changes more easily)
+  
+
+2021-07-23
+  Added a few more details to render array in AdvisingScreen, when drawing course rows.  Also added argument to include the group a course is assigned to, if applicable, to
+  draw_course_row().  This also helps the render engine and any modules which need it.
+  
+
+2021-07-14
+  Fixed bug where form_error's was messing up markup_no_wrappers elements.
+
+  Added extra validation on degree edit form, so that it stops you from adding a duplicate group with mismatched type or min hours.  Also made it
+  so you can delete such a group.
+  
+
+2021-07-12
+  Made it more clear that the currently used SMS service in Engagements is "SignalWire".  Also made sure that emails processed by Engagements were deleted after
+  they were parsed, so they do not fill up the email server's Trash folder.
+  
+
+2021-07-11
+  Fixed bug in engagements module where it was looking for a table which does not exist.
+  
+  Made it so when an appointment (with Zoom) is cancelled, it also deletes the Zoom meeting from zoom's servers.
+
+
+2021-07-10
+  Removed page titles from the Student search pages/forms.
+  
+  Added new CSS for printing.
+  
+  Added ability to add classes to collapsible fieldsets.
+  
+
+2021-07-09
+  Implemented handling of numeric grades in FlightPath.  Basically, they must be converted to letter grades at the time
+  they are assigned.  There is also now a new field in Course:  db_grade.  This is the actual grade as it is stored in the
+  the database.
+  
+  
+ 
+2021-07-08
+  Cleaning up code, adding more content to render array system.  Cleaning up malformed HTML.
+  
+  Continuing work on themeing and rendering system.
+   
+ 
+2021-07-07
+  Converted advise_display_view to use render array system. 
+  
+  Changed when drawing course rows, no longer hard-coding widths, styles, align, etc.
+  elements.  Instead, we are relying entirely only CSS classes for styling.
+ 
+ 
+2021-07-06 
+  Converted AdvisingScreen::displaySemester to using render array system.
+
+  For markup elements in the form_api, if type is not explicitly set to "markup", and is left blank,
+  then the default will be "markup_no_wrappers", which means no wrapping divs will be used. 
+  
+  Converted AdvisingScreen::draw_course_row to use render array system.
+  
+  Fixed bug where remainder of course requirement (after partial sub) wasn't sorting correctly when using 
+  the "sort by database id" setting.
+  
+  Fixed bug in Substitution tab, where split sub "pieces" were not showing the correct number of hours.
+   
+
+
+2021-07-02
+  Modified Calendar module so that event types can be sheduled for longer durations (up to 2 hrs), have longer buffers (up to 2hrs) and have longer "prevent within" times
+  (up to 24 hours).
+  
+  Added more literal strings to t() so they can be translated.
+   
+
+2021-06-28
+  Made change in content_content_load(), to make sure that when we load based on cid, we order by vid DESC, to make
+  sure we always get the most recent version.
+  
+  Fixed code in student_search, where the "include inactive students" checkbox was being ignored.  Also changed settings
+  for extra conditions to add to query.
+  
+  Made changes to the way Student Profile hook works, so that other modules can more easily add to the list, and modify existing
+  entries if desired.
+  
+  Fixed bug where recommended and hidden courses were not behaving correctly in groups.  Worked in Blank Degrees but not in What If or 
+  on the actual degree plan.
+  
+
+2021-06-26
+  Added new field to calendar's appointment content type, to keep up with video meeting data.
+  
+  Fixed typo in the content.module (misspelling of word).
+    
+
+2021-06-23
+  Instead of passing the session_id during redirect, we now pass a "fp_session_str" which contains
+  a method of validating the session_id, to make sure it is not a hacker attempting to imitate a valid
+  session.  This was accomplished by new functions in misc.inc and checking in index.php before we
+  trust the session_id in the URL.
+  
+  
+
+2021-06-22
+  Fixed bug in user module where adding a new faculty user caused mysql error.
+  
+  Added a backtrace (like we do for MySQL errors) to the PHP error handler in misc.inc.  Also adding to watchdog
+  when we get a warning or error from the handler.
+  
+  Changed the way cookies are unset on logout, to fix an issue where they were not being unset correctly, but also
+  to handle possible array notation in the cookie names.  See system.module
+  
+  Made changes to watchdog severity level for certain types of data, in anticipation of a module which would delete, for example,
+  "WATCHDOG_DEBUG" entries after X amount of time, since they are the least important.  Also made changes to the PHP error handler
+  so it correctly identifies in the watchdog whether it was a PHP error or warning, and adjusts the severity constant accordingly.
+  
+  Fixed typo in user settings pulldown menu.
+  
+  Made it so if you are not logged in, the left sidebar menu shows a link to the login page.
+  
+
+2021-06-17
+  Fixed small typo in form_error() message when rejecting a saved degree.
+  
+  In student_search module, got rid of the "majors"-related permissions.  Also cleaned up code which had been commented out.
+  
+
+2021-06-16
+  Adding in new setting to disable all student logins (unless whitelisted).  It's in the System Settings form.
+
+  Added is_disabled and last_login to fields in the user object.
+
+  Added new hook to allow easy manipulation of student profile items in the "currently advising" box at top of screen.
+
+  Changing user_settings to be a key/value pair type table, making it easy to add new settings in the future.
+
+  Created new table called "user_attributes", and it's used the same as user_settings.  This lets us store details about
+  a student, for example, if they are an athlete or student worker, etc, w/o having to hard-code any values.  We are removing the
+  student_attributes and faculty_attributes tables at the same time; user_attributes will replace both tables.
+  
+  
+
+2021-06-15
+  Added more literal strings to t() function so they can be translated.
+  
+
+2021-06-13
+  Changed system.install so that institution_id is a 100 varchar in the database, instead of 10.  Also made `name` an index for transfer_institutions table.
+  
+  Removed some default character set and collation vals from .install scripts, as this can cause a problem in MySQL 8+.
+  
+  Removed apply_draft_changes logic from schools module, since no longer needed and causing error.  Cleaned up old code.  Made sure
+  What If mode only showed correct degrees based on the students' school.
+  
+  Added logic in schools and admin.degrees.inc when copying a degree, make sure to keep up with school id.
+  
+  Fixed Duplicate entire catalog year function to also respect school_id.
+  
+
+2021-06-12
+  Working on schools functionlity for groups & definitions.
+  
+  Fixed a bug where icon filename field was no longer visible when editing degrees.
+  
+  Tweaks to popup which displays the degrees using group.
+  
+  Added a confirm dialog when changing schools, since it could cause all sorts of problems.
+  
+  Watchdog insert was failing because anon user school_id was null; wasn't being intval'd.
+
+  Fixing PHP warning in system_init().
+
+2021-06-11
+  Added _validate function when editing a degree, so we can test for school mis-match.  Also fixed a bug where if there was more than one
+  form_error() for the same element, it wouldn't display the red border around that element.  Also made it so that markup fields
+  can also have form_error called on them.
+
+
+2021-06-10
+  Added ability to have group requirements (in degrees) with fractional hours.  Ex: 0.5 hours or 1.2 hours, etc.  Previously,
+  when a group was loaded, the hours_required field was being intval()'d.  Changed to floatval().
+  
+  Fixed bug where course descriptions were not being cached correctly due to a typo.
+  
+  Wrapped "hours" and "hrs" with t() function so those words can be translated to "credits" if need be in a hook_translate function.
+
+  Fixed bug where group couldn't be deleted from degree plan due to school_id being set.
+  
+  Worked on courses issues with schools.
+  
+
+2021-06-07
+  Added schools select list option for user forms, made other cosmetic changes.
+  
+  Changed users module so that you can enter DEPT_CODE along with department.  Change table schema so that
+  college, dept_code, and deparment are varchar 255.  Will use a machine name version of department if no DEPT_CODE
+  is entered.
+  
+  Found a bug on the dashboard (system.module), where it states what day it is.  I was using strtotime("today"), which apparently
+  was causing issues due to timezone conversions.  Switched it to time() and that fixed the issue.
+  
+
+2021-06-06
+  Finishing up users screen for school id, both faculty and students.  Also added filter options to make it look
+  more consistent.  Added pager to student users screen, since we might theoretically load the entire student
+  list, both past and present.  It shows 30 at a time now.
+  
+
+2021-06-04
+  Working on courses with new school_id.  Changed appearance of courses screen to look more like the other degree
+  edit pages.  Made better use of tables and highlighting when you mouse over a row.  Added a filter form like others
+  as well.
+  
+
+2021-06-03
+  Added new schools filter option to degrees, and working on groups.  Filters on degrees list now actually
+  a form (and added new form to groups) so other modules can modify with hook_form_alter if desired.  Right now,
+  it's only really for the schools module.
+  
+
+2021-06-01
+  Fixed bug in pager_query which was sometimes throwing numbers off.  Expanded functionality of the paget_query function.
+  
+  More work on school_id system, amending the need in some tables.  Decided to declare that CWIDs *must be unique* in FlightPath.
+  Therefore, the users table will be the only place that a user's school_id is stored.
+  
+  Changed wording on user module, which stated CWID had to be numeric.  It does not.
+
+
+2021-05-31
+  Adding school_id to api and queries throughout FlightPath.
+  
+
+2021-05-27
+  Changing some style issues when listing multiple degrees for a student.
+  
+  Change wording for select of tracks if you are required to select a certain number of tracks for a degree.
+  
+  Fixed bug where you couldn't override a semester block title unless you also had a course.
+  
+
+2021-05-25
+  Added schools module to core, and made changes to system.install as well as other .install files, so that tables
+  now have a school_id field and needed keys.
+  
+
+2021-05-16
+  Added lots of changes to student search. We now can see Academic Priority.  Uses pager query and table sort as well.  No
+  more limit on 300 students, since we can do pager.  Made table headers responsive, as well as priority vals.
+
+
+2021-05-11
+  Added ability to have custom logout messages.
+  
+
+2021-05-09
+  Added "last_login" column to users table, and to users screen in admin console.  Also make it so the "contact FlightPath production team" link
+  does not appear if no email address is entered.
+  
+
+2021-05-05
+  In the school settings form, you may now choose to sort courses in degrees and groups not by alphabetical, but by the order
+  in which they were entered.
+
+
+2021-05-04
+  Added fields to groups and group_requirements tables (incl. draft_) to facilitate public notes in groups,
+  as well as "attributes" on a per-requirement level.
+  
+  Changed popup description to use fp_alert() function, with base64 encoding so we don't have to worry
+  about trouble characters, and can enter HTML as well.
+  
+
+2021-04-21
+  Made it simpler to define "unavailable days" for scheduling appointments.
+  
+  Fixed unavailable times table to look cleaner and easier to understand.
+
+2021-04-20
+  Making sure we log incorrect login attempts.
+  
+
+2021-04-06
+  Fixing up blank degrees module, make it show if user has permission.
+  
+  Added masquerade module to core, permits searching by partial email and lastname now.
+  
+
+2021-04-05
+  Making new degrees "allow dynamic" by default.
+  
+  Removing outdated settings variables.
+  
+  Documentation for content module.  Fleshed out the basic page content type as well.
+  
+
+2021-03-14
+  Removing "blocks" module from Core.
+  
+  Adding various modules to core.
+  
+
+2021-02-20
+  Added the base_url to the server name when sending mysql errors via email.
+
+2020-10-07
+	Initial commit of 6.x branch.  There are about to be various changes to FlightPath, which warrants 
+	a new major version.
